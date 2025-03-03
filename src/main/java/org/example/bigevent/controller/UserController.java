@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Pattern;
 import org.example.bigevent.pojo.Result;
 import org.example.bigevent.pojo.User;
 import org.example.bigevent.service.UserService;
+import org.example.bigevent.utils.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,5 +30,19 @@ public class UserController {
             return Result.error("用户名已存在");
         }
 
+    }
+
+    @PostMapping("/login")
+    public Result<String> login(@Pattern(regexp = "^\\S{5,16}$") String username, @Pattern(regexp = "^\\S{5,16}$") String password) {
+        User loginUser = userService.findByUserName(username);
+        if (loginUser == null){
+            return Result.error("用户名错误");
+        }
+
+        if (Md5Util.getMD5String(password).equals(loginUser.getPassword())){
+            return Result.success("JWT Token...");
+        }
+
+        return Result.error("密码错误");
     }
 }
