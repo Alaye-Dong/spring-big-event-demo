@@ -1,13 +1,12 @@
 package org.example.bigevent.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
 import jakarta.validation.constraints.Pattern;
 import org.example.bigevent.pojo.Result;
 import org.example.bigevent.pojo.User;
 import org.example.bigevent.service.UserService;
 import org.example.bigevent.utils.JwtUtil;
 import org.example.bigevent.utils.Md5Util;
+import org.example.bigevent.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -55,10 +54,11 @@ public class UserController {
     }
 
     @GetMapping("/userInfo")
-    public Result<User> userInfo(@RequestHeader(name = "Authorization") String token){
-        Map<String, Object> map = JwtUtil.parseToken(token);
+    public Result<User> userInfo(@RequestHeader(name = "Authorization") String token) {
+        //        Map<String, Object> map = JwtUtil.parseToken(token);
+        //        String username = (String) map.get("username");
+        Map<String, Object> map = ThreadLocalUtil.get();
         String username = (String) map.get("username");
-
         User user = userService.findByUserName(username);
         return Result.success(user);
     }
