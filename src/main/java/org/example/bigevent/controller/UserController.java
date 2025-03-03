@@ -1,15 +1,21 @@
 package org.example.bigevent.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
 import jakarta.validation.constraints.Pattern;
 import org.example.bigevent.pojo.Result;
 import org.example.bigevent.pojo.User;
 import org.example.bigevent.service.UserService;
+import org.example.bigevent.utils.JwtUtil;
 import org.example.bigevent.utils.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -40,7 +46,11 @@ public class UserController {
         }
 
         if (Md5Util.getMD5String(password).equals(loginUser.getPassword())) {
-            return Result.success("JWT Token...");
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("id", loginUser.getId());
+            claims.put("username", loginUser.getUsername());
+            String token = JwtUtil.genToken(claims);
+            return Result.success(token);
         }
 
         return Result.error("密码错误");
