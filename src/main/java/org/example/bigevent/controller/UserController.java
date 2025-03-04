@@ -7,6 +7,7 @@ import org.example.bigevent.service.UserService;
 import org.example.bigevent.utils.JwtUtil;
 import org.example.bigevent.utils.Md5Util;
 import org.example.bigevent.utils.ThreadLocalUtil;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -69,4 +70,9 @@ public class UserController {
         return Result.success();
     }
 
+    @PatchMapping("/updateAvatar")
+    public Result updateAvatar(@RequestParam @URL String avatarUrl){
+        userService.updateAvatar(avatarUrl);
+        return Result.success();
+    }
 }
