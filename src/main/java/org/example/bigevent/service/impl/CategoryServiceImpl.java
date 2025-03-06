@@ -39,4 +39,10 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryMapper.findById(id);
         return category;
     }
+
+    @Override
+    public void update(Category category) {
+        category.setUpdateTime(LocalDateTime.now());
+        categoryMapper.update(category);
+    }
 }
