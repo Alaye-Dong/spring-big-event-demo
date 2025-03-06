@@ -1,5 +1,6 @@
 package org.example.bigevent.mapper;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -19,4 +20,7 @@ public interface ArticleMapper {
 
     @Select("select * from article where id=#{id}")
     Article findById(Integer id);
+
+    @Delete("delete from article where id=#{id}")
+    void delete(Integer id);
 }
