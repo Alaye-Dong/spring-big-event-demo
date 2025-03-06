@@ -57,4 +57,9 @@ public class ArticleServiceImpl implements ArticleService {
         return pageBean;
     }
 
+    @Override
+    public Article findById(Integer id) {
+        return articleMapper.findById(id);
+    }
+
 }

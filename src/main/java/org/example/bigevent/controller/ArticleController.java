@@ -31,4 +31,10 @@ public class ArticleController {
        PageBean<Article> pageBean = articleService.list(pageNum, pageSize, categoryId, state);
        return Result.success(pageBean);
     }
+
+    @GetMapping("/detail")
+    public Result<Article> detail(Integer id) {
+        Article article = articleService.findById(id);
+        return Result.success(article);
+    }
 }

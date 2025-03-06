@@ -2,6 +2,7 @@ package org.example.bigevent.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.example.bigevent.pojo.Article;
 
 import java.util.List;
@@ -15,4 +16,7 @@ public interface ArticleMapper {
 
 
     List<Article> list(Integer userId, Integer categoryId, String state);
+
+    @Select("select * from article where id=#{id}")
+    Article findById(Integer id);
 }
