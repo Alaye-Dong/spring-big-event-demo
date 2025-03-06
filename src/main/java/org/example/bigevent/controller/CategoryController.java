@@ -38,4 +38,10 @@ public class CategoryController {
         categoryService.update(category);
         return Result.success();
     }
+
+    @DeleteMapping
+    public Result delete(Integer id){
+        categoryService.delete(id);
+        return Result.success();
+    }
 }
