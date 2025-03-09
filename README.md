@@ -4,7 +4,7 @@
 
 ## 笔记
 
-### Lombok 错误
+### Lombok @Data 错误
 
 运行项目，出现如下的@Data注解报错
 
@@ -20,11 +20,33 @@ java: 找不到符号
 
 疑惑的点是，在修改之后的某次运行项目，这个设置可能会被莫名其妙的恢复，再次导致错误，需要重新设置。
 
-### Pagehelper 错误
+### Pagehelper ClassCastException 错误
 
-跟随视频教程，在`UserController`中添加了分页功能，但是运行项目，出现Result类型推断错误。
+跟随视频教程，在`UserController`中添加了分页功能，但是运行项目，报错
 
-修改如下，添加`PageInfo`
+```shell
+java.lang.ClassCastException: class java.util.ArrayList cannot be cast to class com.github.pagehelper.Page (java.util.ArrayList is in module java.base of loader 'bootstrap'; com.github.pagehelper.Page is in unnamed module of loader 'app')
+```
+
+`java.lang.ClassCastException` 是因为在 `ArticleServiceImpl.list` 方法中尝试将 `ArrayList` 类型的对象强制转换为 `Page` 类型。具体来说，`articleMapper.list` 返回的是一个普通的 `List<Article>`，而不是 `PageHelper` 的 `Page<Article>`。
+
+要解决这个问题，可以按照以下步骤进行修改：
+
+1. **确保使用了 PageHelper 插件**：确保在项目中正确引入了 `PageHelper` 依赖，并且配置正确。
+
+2. **检查返回类型**：`articleMapper.list` 方法应该返回 `Page<Article>` 而不是普通的 `List<Article>`。如果 `articleMapper.list` 返回的是普通列表，则需要调整该方法的实现或使用 `PageHelper` 提供的方法来获取分页结果。
+
+3. **直接从 PageHelper 获取分页信息**：可以直接通过 `PageHelper` 提供的静态方法获取分页信息，而不需要手动转换。
+
+
+解释：
+- **PageHelper.startPage(pageNum, pageSize)**：开始分页，设置当前页码和每页显示的记录数。
+- **PageInfo<Article> pageInfo = new PageInfo<>(articles)**：使用 `PageInfo` 来封装查询结果，`PageInfo` 是 `PageHelper` 提供的一个类，用于获取分页信息。
+- **pageBean.setTotal(pageInfo.getTotal())** 和 **pageBean.setItems(pageInfo.getList())**：将分页信息设置到 `PageBean` 中。
+
+这样修改后，代码会正确处理分页逻辑，并避免 `ClassCastException` 错误。
+
+修改如下
 
 ```java
     @Override
